@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml;
 
 namespace Plarium.Models
 {
@@ -11,6 +12,7 @@ namespace Plarium.Models
     {
         DirectoryTree myTree, selectTree;
         DirectoryInfo myDir;
+        XmlTextWriter xmlWriter;
         public void GetInfoDirectoryFull(string directory, List<string> listSubDirectories, List<string> listFiles,ref string infoDirectory)
         {
             myDir = new DirectoryInfo(@directory);
@@ -71,6 +73,73 @@ namespace Plarium.Models
             builder.Append("Дата последнего доступа - ").Append(myFile.LastAccessTime).Append("\n");
             builder.Append("Атрибуты - ").Append(myFile.Attributes).Append("\n");
             infoFile = builder.ToString();
+        }
+
+        public void DoXML(string xmlName)
+        {
+            xmlWriter = new XmlTextWriter(xmlName+".xml", null)
+            {
+                Formatting = Formatting.Indented,
+                IndentChar = '\t',
+                Indentation = 1,
+                QuoteChar = '\''
+            };
+            xmlWriter.WriteStartDocument();
+            xmlWriter.WriteStartElement("ListOfBooks");
+            WriteXML(myTree);
+            xmlWriter.WriteEndElement();
+            xmlWriter.Close();
+        }
+
+        private void WriteXML(DirectoryTree selectedTree)
+        {
+            xmlWriter.WriteStartElement("Directory");
+            xmlWriter.WriteStartElement("Имя");
+            xmlWriter.WriteString(selectedTree.directoryValue.Name);
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("ДатаСоздания");
+            xmlWriter.WriteString(selectedTree.directoryValue.CreationTime.ToString());
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("ДатаМодификации");
+            xmlWriter.WriteString(selectedTree.directoryValue.LastWriteTime.ToString());
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("ДатаПоследнегоДоступа");
+            xmlWriter.WriteString(selectedTree.directoryValue.LastAccessTime.ToString());
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("Атрибуты");
+            xmlWriter.WriteString(selectedTree.directoryValue.Attributes.ToString());
+            xmlWriter.WriteEndElement();
+            foreach (var item in selectedTree.listSubDirectories)
+            {
+                WriteXML(item);
+            }
+            foreach (var item in selectedTree.listFiles)
+            {
+                xmlWriter.WriteStartElement("File");
+                WriteFileInXML(item);
+                xmlWriter.WriteEndElement();
+            }
+            xmlWriter.WriteEndElement();
+
+        }
+
+        private void WriteFileInXML(FileInfo item)
+        {
+            xmlWriter.WriteStartElement("Имя");
+            xmlWriter.WriteString(item.Name);
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("ДатаСоздания");
+            xmlWriter.WriteString(item.CreationTime.ToString());
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("ДатаМодификации");
+            xmlWriter.WriteString(item.LastWriteTime.ToString());
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("ДатаПоследнегоДоступа");
+            xmlWriter.WriteString(item.LastAccessTime.ToString());
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("Атрибуты");
+            xmlWriter.WriteString(item.Attributes.ToString());
+            xmlWriter.WriteEndElement();
         }
     }
 }

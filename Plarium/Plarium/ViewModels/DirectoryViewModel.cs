@@ -19,6 +19,7 @@ namespace Plarium.ViewModels
         private DelegateCommand<string> chooseFileComand;
         private DelegateCommand<string> backCommand; 
         private DelegateCommand<string> homeCommand;
+        private DelegateCommand<string> doXMLCommand;
         private int indexSubDir;
         private int indexFile;
         public int IndexFile
@@ -120,6 +121,27 @@ namespace Plarium.ViewModels
                 }
                 return chooseFileComand;
             }
+        }
+        public ICommand DoXMLComand
+        {
+            get
+            {
+                if (doXMLCommand == null)
+                {
+                    doXMLCommand = new DelegateCommand<string>(
+                        DoXML, (string button) => { return true; });
+                }
+                return doXMLCommand;
+            }
+        }
+
+        private void DoXML(string obj)
+        {
+            ChooseDirectory myWindow = new ChooseDirectory();
+            myWindow.MyText.Text = "Введите название файла в\nкотором хотите сохранить XML";
+            myWindow.ShowDialog();
+            if((bool)myWindow.DialogResult)
+                myModel.DoXML(myWindow.Text.Text);
         }
 
         private void ChooseFile(string obj)
