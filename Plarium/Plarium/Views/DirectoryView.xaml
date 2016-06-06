@@ -1,0 +1,32 @@
+﻿<Window x:Class="Plarium.Views.DirectoryView"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Plarium.Views"
+        mc:Ignorable="d"
+        Title="DirectoryView" Height="400" Width="600">
+    <Grid Background="Orange">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="50"/>
+            <RowDefinition/>
+        </Grid.RowDefinitions>
+        <Button Margin="10,5" FontSize="20" >Выбрать</Button>
+        <TextBlock Margin="10,5" Grid.Column="1" Grid.ColumnSpan="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"></TextBlock>
+        <ListBox Grid.Row="1" Margin="10,5"></ListBox>
+        <ListBox Grid.Row="1" Grid.Column="1" Margin="10,5"></ListBox>
+        <Grid Grid.Row="1" Grid.Column="2">
+            <Grid.RowDefinitions>
+                <RowDefinition/>
+                <RowDefinition Height="50"/>
+            </Grid.RowDefinitions>
+            <TextBlock TextAlignment="Center" FontSize ="20" VerticalAlignment="Bottom" HorizontalAlignment="Center" Margin="10,5"></TextBlock>
+            <Button Grid.Row="1" Margin="10,5" FontSize="20">XML</Button>
+        </Grid>
+    </Grid>
+</Window>
