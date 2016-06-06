@@ -10,7 +10,7 @@ namespace Plarium.Models
     class DirectoryTree
     {
         DirectoryInfo directoryValue;
-        List<DirectoryTree> listSubDirectories;
+        List<DirectoryTree> listSubDirectories=new List<DirectoryTree> ();
         FileInfo [] listFiles;
 
         public DirectoryTree(DirectoryInfo directoryValue)

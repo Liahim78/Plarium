@@ -22,6 +22,7 @@ namespace Plarium.Views
         public DirectoryView()
         {
             InitializeComponent();
+            
         }
     }
 }

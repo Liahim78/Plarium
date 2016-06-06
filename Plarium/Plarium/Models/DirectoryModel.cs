@@ -10,7 +10,7 @@ namespace Plarium.Models
     class DirectoryModel
     {
         DirectoryTree myTree;
-        public void GetInfoDirectory(string directory, List<string> listSubDirectories, List<string> listFiles, string infoDirectory)
+        public void GetInfoDirectory(string directory, List<string> listSubDirectories, List<string> listFiles,ref string infoDirectory)
         {
             DirectoryInfo myDir = new DirectoryInfo(@directory);
             foreach (var item in myDir.GetDirectories())
@@ -27,6 +27,7 @@ namespace Plarium.Models
             builder.Append("Дата модификации - ").Append(myDir.LastWriteTime).Append("\n");
             builder.Append("Дата последнего доступа - ").Append(myDir.LastAccessTime).Append("\n");
             builder.Append("Атрибуты - ").Append(myDir.Attributes).Append("\n");
+            infoDirectory = builder.ToString();
             myTree = new DirectoryTree(myDir);
         }
     }

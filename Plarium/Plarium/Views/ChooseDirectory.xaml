@@ -13,7 +13,7 @@
             <RowDefinition/>
         </Grid.RowDefinitions>
         <TextBlock FontSize="20" TextAlignment="Center" VerticalAlignment="Center"  >Введите полный адресс папки</TextBlock>
-        <TextBox FontSize="20" Grid.Row="1" Margin="10,5"></TextBox>
+        <TextBox Name="Text" FontSize="20" Grid.Row="1" Margin="10,5"></TextBox>
         <Grid Grid.Row="2">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition/>
