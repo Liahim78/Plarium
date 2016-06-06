@@ -61,6 +61,7 @@
     </Compile>
     <Compile Include="Comands\DelegateCommand.cs" />
     <Compile Include="Models\DirectoryModel.cs" />
+    <Compile Include="Models\DirectoryTree.cs" />
     <Compile Include="ViewModels\DirectoryViewModel.cs" />
     <Compile Include="ViewModels\ViewModelIBase.cs" />
     <Compile Include="Views\ChooseDirectory.xaml.cs">
