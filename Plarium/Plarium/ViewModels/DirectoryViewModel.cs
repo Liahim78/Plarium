@@ -16,8 +16,16 @@ namespace Plarium.ViewModels
         DirectoryModel myModel = new DirectoryModel();
         private DelegateCommand<string> chooseButtonPressCommand;
         private DelegateCommand<string> chooseSubDirectoryComand;
+        private DelegateCommand<string> chooseFileComand;
         private DelegateCommand<string> backCommand; 
+        private DelegateCommand<string> homeCommand;
         private int indexSubDir;
+        private int indexFile;
+        public int IndexFile
+        {
+            get { return indexFile; }
+            set { indexFile = value; OnPropertyChanged("IndexFile"); }
+        }
         public int IndexSubDir
         {
             get { return indexSubDir; }
@@ -88,6 +96,49 @@ namespace Plarium.ViewModels
                 }
                 return backCommand;
             }
+        }
+        public ICommand HomeCommand
+        {
+            get
+            {
+                if (homeCommand == null)
+                {
+                    homeCommand = new DelegateCommand<string>(
+                        HomeDirectory, (string button) => { return true; });
+                }
+                return homeCommand;
+            }
+        }
+        public ICommand ChooseFileComand
+        {
+            get
+            {
+                if (chooseFileComand == null)
+                {
+                    chooseFileComand = new DelegateCommand<string>(
+                        ChooseFile, (string button) => { return true; });
+                }
+                return chooseFileComand;
+            }
+        }
+
+        private void ChooseFile(string obj)
+        {
+            string s = "";
+            myModel.ChooseFile(indexFile, ref s);
+            InfoDirectory = s;
+        }
+
+        private void HomeDirectory(string obj)
+        {
+            string s = "";
+            List<string> listD = new List<string>();
+            List<string> listF = new List<string>();
+            myModel.HomeDirectory(listD, listF, ref s);
+            ListSubDirectory = listD;
+            ListFile = listF;
+            InfoDirectory = s;
+            VisibilityImage = Visibility.Collapsed;
         }
 
         private void BackDirectory(string obj)

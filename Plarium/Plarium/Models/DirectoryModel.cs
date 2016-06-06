@@ -50,5 +50,27 @@ namespace Plarium.Models
             GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
             return selectTree.perent == null;
         }
+
+        public void HomeDirectory(List<string> listSubDirectories, List<string> listFiles, ref string infoDirectory)
+        {
+            selectTree = myTree;
+            myDir = selectTree.directoryValue;
+            GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
+        }
+
+        internal void ChooseFile(int indexFile, ref string infoFile)
+        {
+            GetInfoFile(selectTree.listFiles[indexFile],out infoFile);
+        }
+        private void GetInfoFile(FileInfo myFile, out string infoFile)
+        {
+            StringBuilder builder = new StringBuilder();
+            builder.Append("Название - ").Append(myFile.Name).Append("\n");
+            builder.Append("Дата создания - ").Append(myFile.CreationTime).Append("\n");
+            builder.Append("Дата модификации - ").Append(myFile.LastWriteTime).Append("\n");
+            builder.Append("Дата последнего доступа - ").Append(myFile.LastAccessTime).Append("\n");
+            builder.Append("Атрибуты - ").Append(myFile.Attributes).Append("\n");
+            infoFile = builder.ToString();
+        }
     }
 }

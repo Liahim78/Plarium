@@ -27,7 +27,7 @@
             <Button Command="{Binding BackCommand}" Margin="35,0" Opacity="0" Visibility="{Binding Path=VisibilityImage, Mode=TwoWay }"></Button>
 
             <Image Visibility="{Binding Path=VisibilityImage, Mode=TwoWay }" Margin="35,0" Grid.Column="1" Source="/Plarium;component/home-146585__180.png"></Image>
-            <Button  Margin="35,0" Grid.Column="1" Opacity="0" Visibility="{Binding Path=VisibilityImage, Mode=TwoWay }"></Button>
+            <Button Command="{Binding HomeCommand}" Margin="35,0" Grid.Column="1" Opacity="0" Visibility="{Binding Path=VisibilityImage, Mode=TwoWay }"></Button>
         </Grid>
         <StackPanel Visibility="{Binding Path=VisibilityAll, Mode=TwoWay }" Grid.Row="1" Margin="10,5">
             <TextBlock  Height="30" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"   > Список поддиректорий</TextBlock>
@@ -36,8 +36,8 @@
         </StackPanel>
         <StackPanel Visibility="{Binding Path=VisibilityAll, Mode=TwoWay }" Grid.Row="1" Grid.Column="1" Margin="10,5">
             <TextBlock Height="30" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"   > Список файлов</TextBlock>
-            <ListBox Height="220" ItemsSource="{Binding Path=ListFile, Mode=TwoWay }" FontSize="20" Margin="10,5" ></ListBox>
-            <Button Height="40" FontSize="17" Margin="10,5" Click="Button_Click">Выбрать файл</Button>
+            <ListBox Height="220" SelectedIndex="{Binding Path=IndexFile, Mode=TwoWay}" ItemsSource="{Binding Path=ListFile, Mode=TwoWay }" FontSize="20" Margin="10,5" ></ListBox>
+            <Button Command="{Binding ChooseFileComand}" Height="40" FontSize="17" Margin="10,5">Выбрать файл</Button>
         </StackPanel>
         <Grid Visibility="{Binding Path=VisibilityAll, Mode=TwoWay }" Grid.Row="1" Grid.Column="2">
             <Grid.RowDefinitions>

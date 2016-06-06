@@ -12,7 +12,7 @@ namespace Plarium.Models
         public DirectoryInfo directoryValue;
         public DirectoryTree perent = null;
         public List<DirectoryTree> listSubDirectories=new List<DirectoryTree> ();
-        FileInfo [] listFiles;
+        public FileInfo [] listFiles;
 
         public DirectoryTree(DirectoryInfo directoryValue)
         {
