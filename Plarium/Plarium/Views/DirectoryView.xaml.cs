@@ -22,7 +22,11 @@ namespace Plarium.Views
         public DirectoryView()
         {
             InitializeComponent();
-            
+        }
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            MessageBox.Show(l.SelectedIndex.ToString());
         }
     }
 }

@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Plarium.Views"
         mc:Ignorable="d"
         Title="DirectoryView" Height="400" Width="1000">
-    <Grid Background="Orange">
+    <Grid Background="#FF007FFF" >
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition/>
@@ -16,11 +16,30 @@
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Button Margin="10,5" Command="{Binding ChooseButtonPressCommand}" FontSize="20" >Выбрать</Button>
-        <TextBlock Margin="10,5" Grid.Column="1" Grid.ColumnSpan="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"></TextBlock>
-        <ListBox ItemsSource="{Binding Path=ListSubDirectory, Mode=TwoWay }" FontSize="20" Grid.Row="1" Margin="10,5"></ListBox>
-        <ListBox ItemsSource="{Binding Path=ListFile, Mode=TwoWay }" FontSize="20" Grid.Row="1" Grid.Column="1" Margin="10,5"></ListBox>
-        <Grid Grid.Row="1" Grid.Column="2">
+        <Button Grid.Column="1" Margin="10,5"  Command="{Binding ChooseButtonPressCommand}" FontSize="20" >Выбрать</Button>
+        <Grid >
+            <Grid.ColumnDefinitions >
+                <ColumnDefinition/>
+                <ColumnDefinition/>
+            </Grid.ColumnDefinitions>
+
+            <Image Visibility="{Binding Path=VisibilityImage, Mode=TwoWay }" Name="Image1" Margin="35,0" Source="/Plarium;component/w256h2561372777082Undo.png"></Image>
+            <Button Command="{Binding BackCommand}" Margin="35,0" Opacity="0" Visibility="{Binding Path=VisibilityImage, Mode=TwoWay }"></Button>
+
+            <Image Visibility="{Binding Path=VisibilityImage, Mode=TwoWay }" Margin="35,0" Grid.Column="1" Source="/Plarium;component/home-146585__180.png"></Image>
+            <Button  Margin="35,0" Grid.Column="1" Opacity="0" Visibility="{Binding Path=VisibilityImage, Mode=TwoWay }"></Button>
+        </Grid>
+        <StackPanel Visibility="{Binding Path=VisibilityAll, Mode=TwoWay }" Grid.Row="1" Margin="10,5">
+            <TextBlock  Height="30" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"   > Список поддиректорий</TextBlock>
+            <ListBox Name="l" Height="220" SelectedIndex="{Binding Path=IndexSubDir, Mode=TwoWay}" ItemsSource="{Binding Path=ListSubDirectory, Mode=TwoWay }" FontSize="20" Margin="10,5"></ListBox>
+            <Button Command="{Binding ChooseSubDirectoryComand}" Height="40" FontSize="17" Margin="10,5">Выбрать поддиректорию</Button>
+        </StackPanel>
+        <StackPanel Visibility="{Binding Path=VisibilityAll, Mode=TwoWay }" Grid.Row="1" Grid.Column="1" Margin="10,5">
+            <TextBlock Height="30" FontSize="20" TextAlignment="Center" VerticalAlignment="Center"   > Список файлов</TextBlock>
+            <ListBox Height="220" ItemsSource="{Binding Path=ListFile, Mode=TwoWay }" FontSize="20" Margin="10,5" ></ListBox>
+            <Button Height="40" FontSize="17" Margin="10,5" Click="Button_Click">Выбрать файл</Button>
+        </StackPanel>
+        <Grid Visibility="{Binding Path=VisibilityAll, Mode=TwoWay }" Grid.Row="1" Grid.Column="2">
             <Grid.RowDefinitions>
                 <RowDefinition/>
                 <RowDefinition Height="50"/>

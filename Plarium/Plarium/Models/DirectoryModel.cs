@@ -9,10 +9,18 @@ namespace Plarium.Models
 {
     class DirectoryModel
     {
-        DirectoryTree myTree;
-        public void GetInfoDirectory(string directory, List<string> listSubDirectories, List<string> listFiles,ref string infoDirectory)
+        DirectoryTree myTree, selectTree;
+        DirectoryInfo myDir;
+        public void GetInfoDirectoryFull(string directory, List<string> listSubDirectories, List<string> listFiles,ref string infoDirectory)
         {
-            DirectoryInfo myDir = new DirectoryInfo(@directory);
+            myDir = new DirectoryInfo(@directory);
+            GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
+            myTree = new DirectoryTree(myDir);
+            selectTree = myTree;
+        }
+
+        private void GetInfoDirectory( List<string> listSubDirectories, List<string> listFiles, out string infoDirectory)
+        {
             foreach (var item in myDir.GetDirectories())
             {
                 listSubDirectories.Add(item.Name);
@@ -28,7 +36,19 @@ namespace Plarium.Models
             builder.Append("Дата последнего доступа - ").Append(myDir.LastAccessTime).Append("\n");
             builder.Append("Атрибуты - ").Append(myDir.Attributes).Append("\n");
             infoDirectory = builder.ToString();
-            myTree = new DirectoryTree(myDir);
+        }
+        public void SelectSubDirectory(int index, List<string> listSubDirectories, List<string> listFiles, ref string infoDirectory)
+        {
+            selectTree = selectTree.listSubDirectories[index];
+            myDir = selectTree.directoryValue;
+            GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
+        }
+        public bool BackDirectory(List<string> listSubDirectories, List<string> listFiles, ref string infoDirectory)
+        {
+            selectTree = selectTree.perent;
+            myDir = selectTree.directoryValue;
+            GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
+            return selectTree.perent == null;
         }
     }
 }
