@@ -16,7 +16,7 @@
             <RowDefinition Height="50"/>
             <RowDefinition/>
         </Grid.RowDefinitions>
-        <Button Margin="10,5" FontSize="20" >Выбрать</Button>
+        <Button Margin="10,5" Command="{Binding ChooseButtonPressCommand}" FontSize="20" >Выбрать</Button>
         <TextBlock Margin="10,5" Grid.Column="1" Grid.ColumnSpan="2" TextAlignment="Center" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="20"></TextBlock>
         <ListBox Grid.Row="1" Margin="10,5"></ListBox>
         <ListBox Grid.Row="1" Grid.Column="1" Margin="10,5"></ListBox>

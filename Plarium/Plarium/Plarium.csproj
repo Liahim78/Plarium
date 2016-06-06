@@ -59,6 +59,13 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Comands\DelegateCommand.cs" />
+    <Compile Include="Models\DirectoryModel.cs" />
+    <Compile Include="ViewModels\DirectoryViewModel.cs" />
+    <Compile Include="ViewModels\ViewModelIBase.cs" />
+    <Compile Include="Views\ChooseDirectory.xaml.cs">
+      <DependentUpon>ChooseDirectory.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Views\DirectoryView.xaml.cs">
       <DependentUpon>DirectoryView.xaml</DependentUpon>
     </Compile>
@@ -91,16 +98,16 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Page Include="Views\ChooseDirectory.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Views\DirectoryView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Comands\" />
-    <Folder Include="Models\" />
-    <Folder Include="ViewModels\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

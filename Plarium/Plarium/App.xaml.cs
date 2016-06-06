@@ -13,5 +13,13 @@ namespace Plarium
     /// </summary>
     public partial class App : Application
     {
+
+        public void OnStartup(Object sender, StartupEventArgs e)
+        {
+            Views.DirectoryView view = new Views.DirectoryView();
+            view.DataContext = new ViewModels.DirectoryViewModel();
+            view.Show();
+        }
     }
+
 }
