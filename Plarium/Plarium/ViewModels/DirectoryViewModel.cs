@@ -1,10 +1,12 @@
-﻿using Plarium.Comands;
+﻿using Microsoft.Win32;
+using Plarium.Comands;
 using Plarium.Models;
 using Plarium.Views;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Input;
@@ -15,6 +17,8 @@ namespace Plarium.ViewModels
     {
         #region Properties
         DirectoryModel myModel = new DirectoryModel();
+        Thread writeMainXML = new Thread(new ParameterizedThreadStart(DirectoryModel.DoXML));
+        Thread writeSelectXML = new Thread(new ParameterizedThreadStart(DirectoryModel.DoSelectXML));
         private DelegateCommand<string> chooseButtonPressCommand;// делегат для метода выбора главной дирректории
         private DelegateCommand<string> chooseSubDirectoryComand;// делегат для перехода на выбранную поддиректорию
         private DelegateCommand<string> chooseFileComand;// делегат для отображения информации о файле
@@ -179,20 +183,18 @@ namespace Plarium.ViewModels
         #region Methods
         private void DoSelectXML(string obj)
         {
-            ChooseDirectory myWindow = new ChooseDirectory();
-            myWindow.MyText.Text = "Введите название файла в\nкотором хотите сохранить XML";
-            myWindow.ShowDialog();
-            if ((bool)myWindow.DialogResult)
-                myModel.DoSelectXML(myWindow.Text.Text);
+            SaveFileDialog _saveDialog = new SaveFileDialog();
+            _saveDialog.Filter = "XML files (*.XML)|*.xml|All Files (*.*)|*.*";
+            if (_saveDialog.ShowDialog() == true)
+                writeSelectXML.Start(_saveDialog.FileName);
         }
 
         private void DoXML(string obj)
         {
-            ChooseDirectory myWindow = new ChooseDirectory();
-            myWindow.MyText.Text = "Введите название файла в\nкотором хотите сохранить XML";
-            myWindow.ShowDialog();
-            if((bool)myWindow.DialogResult)
-                myModel.DoXML(myWindow.Text.Text);
+            SaveFileDialog _saveDialog = new SaveFileDialog();
+            _saveDialog.Filter = "XML files (*.XML)|*.xml|All Files (*.*)|*.*";
+            if (_saveDialog.ShowDialog() == true)
+                 writeMainXML.Start(_saveDialog.FileName);
         }
 
         private void ChooseFile(string obj)
@@ -245,14 +247,21 @@ namespace Plarium.ViewModels
             myWindow.ShowDialog();
             if ((bool)myWindow.DialogResult)
             {
-                string s = "";
-                List<string> listD = new List<string>();
-                List<string> listF = new List<string>();
-                myModel.GetInfoDirectoryFull(myWindow.Text.Text, listD, listF, ref s );
-                ListSubDirectory = listD;
-                ListFile = listF;
-                InfoDirectory = s;
-                VisibilityAll = Visibility.Visible;
+                try
+                {
+                    string s = "";
+                    List<string> listD = new List<string>();
+                    List<string> listF = new List<string>();
+                    myModel.GetInfoDirectoryFull(myWindow.Text.Text, listD, listF, ref s);
+                    ListSubDirectory = listD;
+                    ListFile = listF;
+                    InfoDirectory = s;
+                    VisibilityAll = Visibility.Visible;
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Путь к папке указан не верно");
+                }
             }
 
         }

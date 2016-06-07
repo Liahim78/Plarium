@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security.AccessControl;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
@@ -10,9 +12,9 @@ namespace Plarium.Models
 {
     class DirectoryModel
     {
-        DirectoryTree myTree, selectTree;
+        static DirectoryTree myTree, selectTree;
         DirectoryInfo myDir;
-        XmlTextWriter xmlWriter;
+        static XmlTextWriter xmlWriter;
         /// <summary>
         /// Получение информации о главной дирректории и создание дерева.
         /// </summary>
@@ -22,10 +24,17 @@ namespace Plarium.Models
         /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
         public void GetInfoDirectoryFull(string directory, List<string> listSubDirectories, List<string> listFiles,ref string infoDirectory)
         {
-            myDir = new DirectoryInfo(@directory);
-            GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
-            myTree = new DirectoryTree(myDir);
-            selectTree = myTree;
+            try
+            {
+                myDir = new DirectoryInfo(@directory);
+                GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
+                myTree = new DirectoryTree(myDir);
+                selectTree = myTree;
+            }
+            catch
+            {
+                throw new Exception();
+            }
         }
         /// <summary>
         /// Инофрмация о дирректории myDir
@@ -49,6 +58,31 @@ namespace Plarium.Models
             builder.Append("Дата модификации - ").Append(myDir.LastWriteTime).Append("\n");
             builder.Append("Дата последнего доступа - ").Append(myDir.LastAccessTime).Append("\n");
             builder.Append("Атрибуты - ").Append(myDir.Attributes).Append("\n");
+            builder.Append("Владелец - ").Append(myDir.GetAccessControl(AccessControlSections.Owner).GetOwner(typeof(NTAccount))).Append("\n");
+            WindowsIdentity wi = WindowsIdentity.GetCurrent();
+            builder.Append("Пользователь - ").Append(wi.Name).Append("\n");
+           /* AuthorizationRuleCollection rules = myDir.GetAccessControl(AccessControlSections.All).GetAccessRules(true, true, typeof(NTAccount));
+            foreach (AuthorizationRule rl in rules)
+            {
+                if (!rl.IdentityReference.Value.Equals(wi.Name, StringComparison.CurrentCultureIgnoreCase))
+                {
+                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.WriteData) > 0)
+                        builder.Append("Запись ");
+                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.ReadData) > 0)
+                        builder.Append("Четние ");
+                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.FullControl) > 0)
+                        builder.Append("Полный доступ ");
+                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.ChangePermissions) > 0)
+                        builder.Append("Изменение ");
+                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.ReadAndExecute) > 0)
+                        builder.Append("Чтение и выполнение ");
+                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.ListDirectory) > 0)
+                        builder.Append("Список содержимого папки ");
+                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.Delete) > 0)
+                        builder.Append("Удалить ");
+                }
+                
+            }*/
             infoDirectory = builder.ToString();
         }
         /// <summary>
@@ -103,12 +137,15 @@ namespace Plarium.Models
             builder.Append("Дата модификации - ").Append(myFile.LastWriteTime).Append("\n");
             builder.Append("Дата последнего доступа - ").Append(myFile.LastAccessTime).Append("\n");
             builder.Append("Атрибуты - ").Append(myFile.Attributes).Append("\n");
+            builder.Append("Размер - ").Append(myFile.Length).Append("\n");
+            builder.Append("Владелец - ").Append(myFile.GetAccessControl(AccessControlSections.Owner).GetOwner(typeof(NTAccount))).Append("\n");
+
             infoFile = builder.ToString();
         }
         #region WriteXML
-        public void DoXML(string xmlName)
+        public static void DoXML(object xmlName)
         {
-            xmlWriter = new XmlTextWriter(xmlName+".xml", null)
+            xmlWriter = new XmlTextWriter(xmlName.ToString(), null)
             {
                 Formatting = Formatting.Indented,
                 IndentChar = '\t',
@@ -122,7 +159,7 @@ namespace Plarium.Models
             xmlWriter.Close();
         }
 
-        private void WriteXML(DirectoryTree selectedTree)
+        private static void WriteXML(DirectoryTree selectedTree)
         {
             xmlWriter.WriteStartElement("Directory");
             xmlWriter.WriteStartElement("Имя");
@@ -154,9 +191,9 @@ namespace Plarium.Models
 
         }
 
-        public void DoSelectXML(string xmlName)
+        public static void DoSelectXML(object xmlName)
         {
-            xmlWriter = new XmlTextWriter(xmlName + ".xml", null)
+            xmlWriter = new XmlTextWriter(xmlName.ToString(), null)
             {
                 Formatting = Formatting.Indented,
                 IndentChar = '\t',
@@ -170,7 +207,7 @@ namespace Plarium.Models
             xmlWriter.Close();
         }
 
-        private void WriteFileInXML(FileInfo item)
+        private static void WriteFileInXML(FileInfo item)
         {
             xmlWriter.WriteStartElement("Имя");
             xmlWriter.WriteString(item.Name);
