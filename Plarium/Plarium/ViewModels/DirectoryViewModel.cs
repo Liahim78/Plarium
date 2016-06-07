@@ -13,55 +13,81 @@ namespace Plarium.ViewModels
 {
     class DirectoryViewModel: ViewModelIBase 
     {
+        #region Properties
         DirectoryModel myModel = new DirectoryModel();
-        private DelegateCommand<string> chooseButtonPressCommand;
-        private DelegateCommand<string> chooseSubDirectoryComand;
-        private DelegateCommand<string> chooseFileComand;
-        private DelegateCommand<string> backCommand; 
-        private DelegateCommand<string> homeCommand;
-        private DelegateCommand<string> doXMLCommand;
+        private DelegateCommand<string> chooseButtonPressCommand;// делегат для метода выбора главной дирректории
+        private DelegateCommand<string> chooseSubDirectoryComand;// делегат для перехода на выбранную поддиректорию
+        private DelegateCommand<string> chooseFileComand;// делегат для отображения информации о файле
+        private DelegateCommand<string> backCommand; // делегат для возвращения на родительскую дирректорию
+        private DelegateCommand<string> homeCommand; // делегат для возвращения на главную дирректорию
+        private DelegateCommand<string> doXMLCommand;//  делегат для создания XML файла
+        private DelegateCommand<string> doSelectXMLCommand;//  делегат для создания XML файла выбранной дирректории
         private int indexSubDir;
         private int indexFile;
+        /// <summary>
+        /// Индекс выбранного элемента из ListBox, котороый хранит файлы
+        /// </summary>
         public int IndexFile
         {
             get { return indexFile; }
             set { indexFile = value; OnPropertyChanged("IndexFile"); }
         }
+        /// <summary>
+        /// Индекс выбранного элемента из ListBox, котороый хранит поддиректории
+        /// </summary>
         public int IndexSubDir
         {
             get { return indexSubDir; }
             set { indexSubDir = value; OnPropertyChanged("IndexSubDir"); }
         }
         List<string> listSubDirectory=new List<string> ();
+        /// <summary>
+        /// Список поддиректорий, котрый будет отображаться в ListBox
+        /// </summary>
         public List<string> ListSubDirectory
         {
             get { return listSubDirectory; }
             set { listSubDirectory = value; OnPropertyChanged("ListSubDirectory"); }
         }
         List<string> listFile=new List<string> ();
+        /// <summary>
+        /// Список файлов, котрый будет отображаться в ListBox
+        /// </summary>
         public List<string> ListFile
         {
             get { return listFile; }
             set { listFile = value; OnPropertyChanged("ListFile"); }
         }
         string infoDirectory = "";
+        /// <summary>
+        /// Информация о текущей дирректории
+        /// </summary>
         public string InfoDirectory
         {
             get { return infoDirectory; }
             set { infoDirectory = value; OnPropertyChanged("InfoDirectory"); }
         }
         Visibility visibilityAll = Visibility.Collapsed;
+        /// <summary>
+        /// Свойство отвечает за отображение объектов в окне
+        /// </summary>
         public Visibility VisibilityAll
         {
             get { return visibilityAll; }
             set { visibilityAll = value; OnPropertyChanged("VisibilityAll"); }
         }
         Visibility visibilityImage = Visibility.Collapsed;
+        /// <summary>
+        /// Свойство отвечает за отображение картинок в окне
+        /// </summary>
         public Visibility VisibilityImage
         {
             get { return visibilityImage; }
             set { visibilityImage = value; OnPropertyChanged("VisibilityImage"); }
         }
+        #endregion
+
+        #region Comands
         public ICommand ChooseButtonPressCommand
         {
             get
@@ -122,7 +148,7 @@ namespace Plarium.ViewModels
                 return chooseFileComand;
             }
         }
-        public ICommand DoXMLComand
+        public ICommand DoXMLCommand
         {
             get
             {
@@ -133,6 +159,31 @@ namespace Plarium.ViewModels
                 }
                 return doXMLCommand;
             }
+        }
+        public ICommand DoSlectXMLCommand
+        {
+            get
+            {
+                if (doSelectXMLCommand == null)
+                {
+                    doSelectXMLCommand = new DelegateCommand<string>(
+                        DoSelectXML, (string button) => { return true; });
+                }
+                return doSelectXMLCommand;
+            }
+        }
+
+        
+        #endregion
+
+        #region Methods
+        private void DoSelectXML(string obj)
+        {
+            ChooseDirectory myWindow = new ChooseDirectory();
+            myWindow.MyText.Text = "Введите название файла в\nкотором хотите сохранить XML";
+            myWindow.ShowDialog();
+            if ((bool)myWindow.DialogResult)
+                myModel.DoSelectXML(myWindow.Text.Text);
         }
 
         private void DoXML(string obj)
@@ -205,5 +256,6 @@ namespace Plarium.ViewModels
             }
 
         }
+        #endregion
     }
 }

@@ -13,6 +13,13 @@ namespace Plarium.Models
         DirectoryTree myTree, selectTree;
         DirectoryInfo myDir;
         XmlTextWriter xmlWriter;
+        /// <summary>
+        /// Получение информации о главной дирректории и создание дерева.
+        /// </summary>
+        /// <param name="directory">полный адресс дирректории</param>
+        /// <param name="listSubDirectories">параметр для передачи списка поддиректорий данной дирректории</param>
+        /// <param name="listFiles">параметр для передачи списка файлов данной дирректории</param>
+        /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
         public void GetInfoDirectoryFull(string directory, List<string> listSubDirectories, List<string> listFiles,ref string infoDirectory)
         {
             myDir = new DirectoryInfo(@directory);
@@ -20,7 +27,12 @@ namespace Plarium.Models
             myTree = new DirectoryTree(myDir);
             selectTree = myTree;
         }
-
+        /// <summary>
+        /// Инофрмация о дирректории myDir
+        /// </summary>
+        /// <param name="listSubDirectories">параметр для передачи списка поддиректорий данной дирректории</param>
+        /// <param name="listFiles">параметр для передачи списка файлов данной дирректории</param>
+        /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
         private void GetInfoDirectory( List<string> listSubDirectories, List<string> listFiles, out string infoDirectory)
         {
             foreach (var item in myDir.GetDirectories())
@@ -39,12 +51,26 @@ namespace Plarium.Models
             builder.Append("Атрибуты - ").Append(myDir.Attributes).Append("\n");
             infoDirectory = builder.ToString();
         }
+        /// <summary>
+        /// Информация о поддиректории
+        /// </summary>
+        /// <param name="index">индекс поддиректории</param>
+        /// <param name="listSubDirectories">параметр для передачи списка поддиректорий данной дирректории</param>
+        /// <param name="listFiles">параметр для передачи списка файлов данной дирректории</param>
+        /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
         public void SelectSubDirectory(int index, List<string> listSubDirectories, List<string> listFiles, ref string infoDirectory)
         {
             selectTree = selectTree.listSubDirectories[index];
             myDir = selectTree.directoryValue;
             GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
         }
+        /// <summary>
+        /// Возвращение к родительской дирректориии
+        /// </summary>
+        /// <param name="listSubDirectories">параметр для передачи списка поддиректорий данной дирректории</param>
+        /// <param name="listFiles">параметр для передачи списка файлов данной дирректории</param>
+        /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
+        /// <returns>Возвращает значение true, если у выбранной дирректории больше нет родителя</returns>
         public bool BackDirectory(List<string> listSubDirectories, List<string> listFiles, ref string infoDirectory)
         {
             selectTree = selectTree.perent;
@@ -52,7 +78,12 @@ namespace Plarium.Models
             GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
             return selectTree.perent == null;
         }
-
+        /// <summary>
+        /// Возвращение к главной дирректориии
+        /// </summary>
+        /// <param name="listSubDirectories">параметр для передачи списка поддиректорий данной дирректории</param>
+        /// <param name="listFiles">параметр для передачи списка файлов данной дирректории</param>
+        /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
         public void HomeDirectory(List<string> listSubDirectories, List<string> listFiles, ref string infoDirectory)
         {
             selectTree = myTree;
@@ -60,7 +91,7 @@ namespace Plarium.Models
             GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
         }
 
-        internal void ChooseFile(int indexFile, ref string infoFile)
+        public void ChooseFile(int indexFile, ref string infoFile)
         {
             GetInfoFile(selectTree.listFiles[indexFile],out infoFile);
         }
@@ -74,7 +105,7 @@ namespace Plarium.Models
             builder.Append("Атрибуты - ").Append(myFile.Attributes).Append("\n");
             infoFile = builder.ToString();
         }
-
+        #region WriteXML
         public void DoXML(string xmlName)
         {
             xmlWriter = new XmlTextWriter(xmlName+".xml", null)
@@ -85,7 +116,7 @@ namespace Plarium.Models
                 QuoteChar = '\''
             };
             xmlWriter.WriteStartDocument();
-            xmlWriter.WriteStartElement("ListOfBooks");
+            xmlWriter.WriteStartElement("ListOfDirectories");
             WriteXML(myTree);
             xmlWriter.WriteEndElement();
             xmlWriter.Close();
@@ -123,6 +154,22 @@ namespace Plarium.Models
 
         }
 
+        public void DoSelectXML(string xmlName)
+        {
+            xmlWriter = new XmlTextWriter(xmlName + ".xml", null)
+            {
+                Formatting = Formatting.Indented,
+                IndentChar = '\t',
+                Indentation = 1,
+                QuoteChar = '\''
+            };
+            xmlWriter.WriteStartDocument();
+            xmlWriter.WriteStartElement("ListOfDirectories");
+            WriteXML(selectTree);
+            xmlWriter.WriteEndElement();
+            xmlWriter.Close();
+        }
+
         private void WriteFileInXML(FileInfo item)
         {
             xmlWriter.WriteStartElement("Имя");
@@ -141,5 +188,6 @@ namespace Plarium.Models
             xmlWriter.WriteString(item.Attributes.ToString());
             xmlWriter.WriteEndElement();
         }
+        #endregion
     }
 }

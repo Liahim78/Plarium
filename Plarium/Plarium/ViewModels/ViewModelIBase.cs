@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 namespace Plarium.ViewModels
 {
+    //Класс для реализации интерфейса INotifyPropertyChanged
     class ViewModelIBase : INotifyPropertyChanged
     {
         public event PropertyChangedEventHandler PropertyChanged;
