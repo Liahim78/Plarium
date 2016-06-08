@@ -54,6 +54,8 @@
                 <Button Grid.Column="1" Margin="10,5" FontSize="20" Command="{Binding DoXMLCommand}">XML для главной дирректории</Button>
             </Grid>
             
+            
         </Grid>
+        <Button Grid.Column="2" Click="Button_Click" FontSize="20" Margin="20,5">Help</Button>
     </Grid>
 </Window>

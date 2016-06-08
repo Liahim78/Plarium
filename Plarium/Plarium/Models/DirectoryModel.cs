@@ -5,6 +5,7 @@ using System.Linq;
 using System.Security.AccessControl;
 using System.Security.Principal;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Xml;
 
@@ -13,23 +14,23 @@ namespace Plarium.Models
     class DirectoryModel
     {
         static DirectoryTree myTree, selectTree;
-        DirectoryInfo myDir;
+        static DirectoryInfo myDir;
         static XmlTextWriter xmlWriter;
+        Thread CreateTree = new Thread(new ThreadStart(TreeCreate));
         /// <summary>
-        /// Получение информации о главной дирректории и создание дерева.
+        /// Getting information about the main directory and the establishment of the tree.
         /// </summary>
-        /// <param name="directory">полный адресс дирректории</param>
-        /// <param name="listSubDirectories">параметр для передачи списка поддиректорий данной дирректории</param>
-        /// <param name="listFiles">параметр для передачи списка файлов данной дирректории</param>
-        /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
+        /// <param name="directory">full address directory</param>
+        /// <param name="listSubDirectories">option for transmission of the list of directories directory</param>
+        /// <param name="listFiles">option to transmit the list of the specified directory files</param>
+        /// <param name="infoDirectory">parameter to pass information about this directory</param>
         public void GetInfoDirectoryFull(string directory, List<string> listSubDirectories, List<string> listFiles,ref string infoDirectory)
         {
             try
             {
                 myDir = new DirectoryInfo(@directory);
                 GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
-                myTree = new DirectoryTree(myDir);
-                selectTree = myTree;
+                CreateTree.Start();
             }
             catch
             {
@@ -37,11 +38,19 @@ namespace Plarium.Models
             }
         }
         /// <summary>
-        /// Инофрмация о дирректории myDir
+        /// Create tree
         /// </summary>
-        /// <param name="listSubDirectories">параметр для передачи списка поддиректорий данной дирректории</param>
-        /// <param name="listFiles">параметр для передачи списка файлов данной дирректории</param>
-        /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
+        private static void TreeCreate()
+        {
+            myTree = new DirectoryTree(myDir);
+            selectTree = myTree;
+        }
+        /// <summary>
+        /// Information about myDir directory
+        /// </summary>
+        /// <param name="listSubDirectories">option for transmission of the list of directories directory</param>
+        /// <param name="listFiles">option to transmit the list of the specified directory files</param>
+        /// <param name="infoDirectory">parameter to pass information about this directory</param>
         private void GetInfoDirectory( List<string> listSubDirectories, List<string> listFiles, out string infoDirectory)
         {
             foreach (var item in myDir.GetDirectories())
@@ -61,6 +70,7 @@ namespace Plarium.Models
             builder.Append("Владелец - ").Append(myDir.GetAccessControl(AccessControlSections.Owner).GetOwner(typeof(NTAccount))).Append("\n");
             WindowsIdentity wi = WindowsIdentity.GetCurrent();
             builder.Append("Пользователь - ").Append(wi.Name).Append("\n");
+            // TODO: User's rules
            /* AuthorizationRuleCollection rules = myDir.GetAccessControl(AccessControlSections.All).GetAccessRules(true, true, typeof(NTAccount));
             foreach (AuthorizationRule rl in rules)
             {
@@ -86,12 +96,12 @@ namespace Plarium.Models
             infoDirectory = builder.ToString();
         }
         /// <summary>
-        /// Информация о поддиректории
+        /// Information on the sub-directory
         /// </summary>
-        /// <param name="index">индекс поддиректории</param>
-        /// <param name="listSubDirectories">параметр для передачи списка поддиректорий данной дирректории</param>
-        /// <param name="listFiles">параметр для передачи списка файлов данной дирректории</param>
-        /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
+        /// <param name="index">subdirectories index</param>
+        /// <param name="listSubDirectories">option for transmission of the list of directories directory</param>
+        /// <param name="listFiles">option to transmit the list of the specified directory files</param>
+        /// <param name="infoDirectory">parameter to pass information about this directory</param>
         public void SelectSubDirectory(int index, List<string> listSubDirectories, List<string> listFiles, ref string infoDirectory)
         {
             selectTree = selectTree.listSubDirectories[index];
@@ -99,36 +109,45 @@ namespace Plarium.Models
             GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
         }
         /// <summary>
-        /// Возвращение к родительской дирректориии
+        /// Return to the parent directory
         /// </summary>
-        /// <param name="listSubDirectories">параметр для передачи списка поддиректорий данной дирректории</param>
-        /// <param name="listFiles">параметр для передачи списка файлов данной дирректории</param>
-        /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
-        /// <returns>Возвращает значение true, если у выбранной дирректории больше нет родителя</returns>
+        /// <param name="listSubDirectories">option for transmission of the list of directories directory</param>
+        /// <param name="listFiles">option to transmit the list of the specified directory files</param>
+        /// <param name="infoDirectory">parameter to pass information about this directory</param>
+        /// <returns>Returns true if the selected directory has not more the parent</returns>
         public bool BackDirectory(List<string> listSubDirectories, List<string> listFiles, ref string infoDirectory)
         {
-            selectTree = selectTree.perent;
+            selectTree = selectTree.parent;
             myDir = selectTree.directoryValue;
             GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
-            return selectTree.perent == null;
+            return selectTree.parent == null;
         }
         /// <summary>
-        /// Возвращение к главной дирректориии
+        /// Return to main directory
         /// </summary>
-        /// <param name="listSubDirectories">параметр для передачи списка поддиректорий данной дирректории</param>
-        /// <param name="listFiles">параметр для передачи списка файлов данной дирректории</param>
-        /// <param name="infoDirectory">параметр для передачи информации о данной дирректории</param>
+        /// <param name="listSubDirectories">option for transmission of the list of directories directory</param>
+        /// <param name="listFiles">option to transmit the list of the specified directory files</param>
+        /// <param name="infoDirectory">parameter to pass information about this directory</param>
         public void HomeDirectory(List<string> listSubDirectories, List<string> listFiles, ref string infoDirectory)
         {
             selectTree = myTree;
             myDir = selectTree.directoryValue;
             GetInfoDirectory(listSubDirectories, listFiles, out infoDirectory);
         }
-
+        /// <summary>
+        /// file selection
+        /// </summary>
+        /// <param name="indexFile">file index</param>
+        /// <param name="infoFile">File information</param>
         public void ChooseFile(int indexFile, ref string infoFile)
         {
             GetInfoFile(selectTree.listFiles[indexFile],out infoFile);
         }
+        /// <summary>
+        /// It gives information about a file
+        /// </summary>
+        /// <param name="myFile">file</param>
+        /// <param name="infoFile">File information</param>
         private void GetInfoFile(FileInfo myFile, out string infoFile)
         {
             StringBuilder builder = new StringBuilder();
@@ -177,6 +196,9 @@ namespace Plarium.Models
             xmlWriter.WriteStartElement("Атрибуты");
             xmlWriter.WriteString(selectedTree.directoryValue.Attributes.ToString());
             xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("Владелец");
+            xmlWriter.WriteString(myDir.GetAccessControl(AccessControlSections.Owner).GetOwner(typeof(NTAccount)).ToString());
+            xmlWriter.WriteEndElement();
             foreach (var item in selectedTree.listSubDirectories)
             {
                 WriteXML(item);
@@ -223,6 +245,12 @@ namespace Plarium.Models
             xmlWriter.WriteEndElement();
             xmlWriter.WriteStartElement("Атрибуты");
             xmlWriter.WriteString(item.Attributes.ToString());
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("Размер");
+            xmlWriter.WriteString(item.Length.ToString());
+            xmlWriter.WriteEndElement();
+            xmlWriter.WriteStartElement("Владелец");
+            xmlWriter.WriteString(item.GetAccessControl(AccessControlSections.Owner).GetOwner(typeof(NTAccount)).ToString());
             xmlWriter.WriteEndElement();
         }
         #endregion

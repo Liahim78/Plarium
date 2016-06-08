@@ -19,17 +19,17 @@ namespace Plarium.ViewModels
         DirectoryModel myModel = new DirectoryModel();
         Thread writeMainXML = new Thread(new ParameterizedThreadStart(DirectoryModel.DoXML));
         Thread writeSelectXML = new Thread(new ParameterizedThreadStart(DirectoryModel.DoSelectXML));
-        private DelegateCommand<string> chooseButtonPressCommand;// делегат для метода выбора главной дирректории
-        private DelegateCommand<string> chooseSubDirectoryComand;// делегат для перехода на выбранную поддиректорию
-        private DelegateCommand<string> chooseFileComand;// делегат для отображения информации о файле
-        private DelegateCommand<string> backCommand; // делегат для возвращения на родительскую дирректорию
-        private DelegateCommand<string> homeCommand; // делегат для возвращения на главную дирректорию
-        private DelegateCommand<string> doXMLCommand;//  делегат для создания XML файла
-        private DelegateCommand<string> doSelectXMLCommand;//  делегат для создания XML файла выбранной дирректории
+        private DelegateCommand<string> chooseButtonPressCommand;// delegate for the method main directory
+        private DelegateCommand<string> chooseSubDirectoryComand;// delegate to go to the selected directory
+        private DelegateCommand<string> chooseFileComand;//delegate to display information about a file
+        private DelegateCommand<string> backCommand; // delegate to return to the parent directory
+        private DelegateCommand<string> homeCommand; // delegate to return to the home directory
+        private DelegateCommand<string> doXMLCommand;//  delegate to create an XML file
+        private DelegateCommand<string> doSelectXMLCommand;//  delegate to create an XML file of the selected directory
         private int indexSubDir;
         private int indexFile;
         /// <summary>
-        /// Индекс выбранного элемента из ListBox, котороый хранит файлы
+        /// The index of the selected item from the ListBox, which stores files
         /// </summary>
         public int IndexFile
         {
@@ -37,7 +37,7 @@ namespace Plarium.ViewModels
             set { indexFile = value; OnPropertyChanged("IndexFile"); }
         }
         /// <summary>
-        /// Индекс выбранного элемента из ListBox, котороый хранит поддиректории
+        /// The index of the selected element ListBox, which stores the subdirectory
         /// </summary>
         public int IndexSubDir
         {
@@ -46,7 +46,7 @@ namespace Plarium.ViewModels
         }
         List<string> listSubDirectory=new List<string> ();
         /// <summary>
-        /// Список поддиректорий, котрый будет отображаться в ListBox
+        /// The list of directories that will be displayed in the ListBox
         /// </summary>
         public List<string> ListSubDirectory
         {
@@ -55,7 +55,7 @@ namespace Plarium.ViewModels
         }
         List<string> listFile=new List<string> ();
         /// <summary>
-        /// Список файлов, котрый будет отображаться в ListBox
+        /// The list of files that will be displayed in the ListBox
         /// </summary>
         public List<string> ListFile
         {
@@ -64,7 +64,7 @@ namespace Plarium.ViewModels
         }
         string infoDirectory = "";
         /// <summary>
-        /// Информация о текущей дирректории
+        /// Information about the current directory
         /// </summary>
         public string InfoDirectory
         {
@@ -73,7 +73,7 @@ namespace Plarium.ViewModels
         }
         Visibility visibilityAll = Visibility.Collapsed;
         /// <summary>
-        /// Свойство отвечает за отображение объектов в окне
+        /// Property is responsible for mapping objects in the window
         /// </summary>
         public Visibility VisibilityAll
         {
@@ -82,7 +82,7 @@ namespace Plarium.ViewModels
         }
         Visibility visibilityImage = Visibility.Collapsed;
         /// <summary>
-        /// Свойство отвечает за отображение картинок в окне
+        /// The property is responsible for the display of pictures in the window
         /// </summary>
         public Visibility VisibilityImage
         {
@@ -92,6 +92,8 @@ namespace Plarium.ViewModels
         #endregion
 
         #region Comands
+
+        
         public ICommand ChooseButtonPressCommand
         {
             get

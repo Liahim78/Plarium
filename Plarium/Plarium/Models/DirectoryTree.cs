@@ -10,7 +10,7 @@ namespace Plarium.Models
     class DirectoryTree
     {
         public DirectoryInfo directoryValue;
-        public DirectoryTree perent = null;
+        public DirectoryTree parent = null;
         public List<DirectoryTree> listSubDirectories=new List<DirectoryTree> ();
         public FileInfo [] listFiles;
 
@@ -20,7 +20,7 @@ namespace Plarium.Models
             foreach (var item in directoryValue.GetDirectories())
             {
                 DirectoryTree temp = new DirectoryTree(item);
-                temp.perent = this;
+                temp.parent = this;
                 listSubDirectories.Add(temp);
                 
             }

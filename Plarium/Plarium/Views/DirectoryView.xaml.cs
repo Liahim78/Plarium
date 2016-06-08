@@ -23,6 +23,11 @@ namespace Plarium.Views
         {
             InitializeComponent();
         }
-        
+
+        private void Button_Click(object sender, RoutedEventArgs e)
+        {
+            HelpWindow help = new HelpWindow();
+            help.ShowDialog();
+        }
     }
 }
