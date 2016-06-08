@@ -70,29 +70,6 @@ namespace Plarium.Models
             builder.Append("Владелец - ").Append(myDir.GetAccessControl(AccessControlSections.Owner).GetOwner(typeof(NTAccount))).Append("\n");
             WindowsIdentity wi = WindowsIdentity.GetCurrent();
             builder.Append("Пользователь - ").Append(wi.Name).Append("\n");
-            // TODO: User's rules
-           /* AuthorizationRuleCollection rules = myDir.GetAccessControl(AccessControlSections.All).GetAccessRules(true, true, typeof(NTAccount));
-            foreach (AuthorizationRule rl in rules)
-            {
-                if (!rl.IdentityReference.Value.Equals(wi.Name, StringComparison.CurrentCultureIgnoreCase))
-                {
-                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.WriteData) > 0)
-                        builder.Append("Запись ");
-                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.ReadData) > 0)
-                        builder.Append("Четние ");
-                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.FullControl) > 0)
-                        builder.Append("Полный доступ ");
-                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.ChangePermissions) > 0)
-                        builder.Append("Изменение ");
-                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.ReadAndExecute) > 0)
-                        builder.Append("Чтение и выполнение ");
-                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.ListDirectory) > 0)
-                        builder.Append("Список содержимого папки ");
-                    if ((((FileSystemAccessRule)rl).FileSystemRights & FileSystemRights.Delete) > 0)
-                        builder.Append("Удалить ");
-                }
-                
-            }*/
             infoDirectory = builder.ToString();
         }
         /// <summary>
